@@ -1,25 +1,45 @@
 [package]
-name = "tauri-app"
+name = "docx-ai-helper"
 version = "0.1.0"
-description = "A Tauri App"
+description = "AI-powered content modification for Microsoft Word"
 authors = ["you"]
 edition = "2021"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
 [lib]
-# The `_lib` suffix may seem redundant but it is necessary
-# to make the lib name unique and wouldn't conflict with the bin name.
-# This seems to be only an issue on Windows, see https://github.com/rust-lang/cargo/issues/8519
-name = "tauri_app_lib"
+name = "docx_ai_helper_lib"
 crate-type = ["staticlib", "cdylib", "rlib"]
 
 [build-dependencies]
 tauri-build = { version = "2", features = [] }
 
 [dependencies]
-tauri = { version = "2", features = [] }
+tauri = { version = "2", features = ["tray-icon"] }
 tauri-plugin-opener = "2"
+tauri-plugin-store = "2"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 
+# HTTP server (serves Office Add-In task pane + API)
+axum = "0.7"
+axum-server = { version = "0.7", features = ["tls-rustls"] }
+tower-http = { version = "0.6", features = ["cors"] }
+tower = "0.5"
+
+# Async runtime
+tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
+
+# AI API client
+reqwest = { version = "0.12", features = ["json", "rustls-tls"], default-features = false }
+
+# TLS certificate generation
+rcgen = "0.13"
+
+# Embed static files (add-in HTML/JS/CSS) into binary
+rust-embed = "8"
+mime_guess = "2"
+
+# Logging
+log = "0.4"
+
+# TLS Crypto Provider configuration
+rustls = { version = "0.23", features = ["aws-lc-rs"] }

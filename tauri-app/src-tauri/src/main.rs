@@ -2,5 +2,8 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 fn main() {
-    tauri_app_lib::run()
+    // Explicitly install default crypto provider for rustls 0.23+
+    let _ = rustls::crypto::aws_lc_rs::default_provider().install_default();
+
+    docx_ai_helper_lib::run()
 }
